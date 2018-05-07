@@ -49,24 +49,7 @@ object Publish {
           }).transform(node).head
         }
     )
-
-    if (!propFile.exists) {
-      defaults
-    } else {
-      val props = new Properties
-      val input = new FileInputStream(propFile)
-      try props.load(input) finally input.close()
-      mavenSettings ++ defaults ++ Seq(
-        PgpSettings.pgpPassphrase := Some(props.getProperty(keyPassword).toArray),
-        PgpSettings.pgpSecretRing := file(props.getProperty(secretKeyRing)),
-        credentials += Credentials(
-          "Sonatype Nexus Repository Manager",
-          "oss.sonatype.org",
-          props.getProperty(username),
-          props.getProperty(password)),
-        publishSnapshot <<= publishSnapshotTask
-      )
-    }
+    defaults
   }
 
   lazy val assemblySettings = Seq(
